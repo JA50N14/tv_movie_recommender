@@ -12,7 +12,7 @@ def show_search_title(show_title):
     }
     response = requests.get(url, params=payload, headers=headers)
     python_obj = json.loads(response.text)
-    show_list = [(show['name'], show['id']) for show in python_obj['results']]
+    show_list = [(show['name'], show['id'], f"{show['overview'][:85]}...") for show in python_obj['results']]
     return show_list 
 
 

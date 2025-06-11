@@ -16,8 +16,8 @@ SEARCH_MOVIE_OPTIONS = {
 
 def entrance():
     print("--------------------------------------------------------------------------------------------------------------------")
-    print("""Welcome to TV Show and Movie recommender main menu! At any point, press 0 to return to this main menu OR \"q\" to quit.\n
-Press 1 if searching for a TV show or 2 if searching for a movie.
+    print("""Welcome to TV Show and Movie Recommender main menu! At any point, press 0 to return to this main menu OR \"q\" to quit.\n
+Press 1 if searching for a TV show OR 2 if searching for a movie.
           """)
 
     while True:
@@ -40,16 +40,13 @@ Press 1 if searching for a TV show or 2 if searching for a movie.
         if search_type == 1:
             title_id_list = show_search_title(tv_movie_title_str)
         elif search_type == 2:
-            #title_id_list = movie_search_title(tv_movie_title_str)
-            pass
+            title_id_list = movie_search_title(tv_movie_title_str)
         
         if len(title_id_list) != 0:
             break
         print(f"There were no matches found for \"{tv_movie_title_str}\". Please try entering a different title.")
     
     title_and_id = select_tv_movie_title_from_results(title_id_list, tv_movie_title_str)
-    print(title_and_id)
-    #########################
 
     if search_type == 1:
         match query_type:
@@ -68,24 +65,29 @@ Press 1 if searching for a TV show or 2 if searching for a movie.
             case 3:
                 movie_description(title_and_id)
     
-    
-        
-
-
-    #CALL TV SHOW OR MOVIE API BASED ON: search_type (1=tv, 2=movie) / query_type (1=recommender, 2=similar, 3=description) / title_and_id=(title, id)
+    while True:
+        print('Press 0 to return to the main menu to perform another search OR \"q\" to exit the program.')
+        menu_or_quit = input("> ")
+        main_menu_or_quit(menu_or_quit)
+        print('You did not enter a valid input!')
 
 
 def select_tv_movie_title_from_results(title_id_list, title_str):
     if len(title_id_list) == 1:
         return title_id_list[0]
+    same_title_count = 0
     for i in range(len(title_id_list)):
         if title_str.lower() == title_id_list[i][0].lower():
-            return title_id_list[i]
+            idx = i
+            same_title_count += 1
+    
+    if same_title_count == 1:
+        return title_id_list[idx]
     
     while True:
-        print(f"Select the title by entering its corresponding number.")
+        print(f"Select the title by entering its corresponding number:")
         for i in range(len(title_id_list)):
-            print(f"{i + 1}. {title_id_list[i][0]}")
+            print(f"{i + 1}. {title_id_list[i][0]} - {title_id_list[i][2]}")
         title_num = input("> ")
         main_menu_or_quit(title_num)
         if title_num.isdigit():
@@ -104,7 +106,7 @@ def get_tv_movie_title(search_type):
             print("Enter the name of the movie.")
         title = input("> ").strip()
         main_menu_or_quit(title)
-        print(f"\nIs this correct \"{title}\"? Enter y or n")
+        print(f"\nIs this correct - \"{title}\"? Enter y or n")
         verify_title = input("> ").lower()
         if verify_title == "y":
             break
